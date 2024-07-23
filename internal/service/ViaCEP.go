@@ -86,7 +86,7 @@ func (c *ViaCEP) Search() (CEPOutput dto.CEPOutput, err error) {
 	// realizo pesquisas cada um em sua rotina
 	resp, err := client.Get("https://viacep.com.br/ws/" + c.CEP + "/json/")
 	if err != nil {
-		return CEPOutput, errors.New("ocorreu um erro, ao buscar informações")
+		return CEPOutput, errors.New("ocorreu um erro, ao buscar informações: " + err.Error())
 	}
 
 	respBody, err := io.ReadAll(resp.Body)
@@ -113,5 +113,5 @@ func (c *ViaCEP) Search() (CEPOutput dto.CEPOutput, err error) {
 		return CEPOutput, nil
 	}
 
-	return CEPOutput, errors.New("ocorreu um erro, ao buscar informações")
+	return CEPOutput, errors.New("ocorreu um erro, ao buscar informações: bad request via CEP")
 }
