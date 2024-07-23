@@ -29,7 +29,7 @@ func (c *WeatherAPI) Search() (weatherAPIOutput dto.WeatherOutput, err error) {
 	}
 
 	// realizo pesquisas cada um em sua rotina
-	resp, err := client.Get("https://api.weatherapi.com/v1/current.json?key=" + c.key + "&q=" + c.Localidade)
+	resp, err := client.Get("http://api.weatherapi.com/v1/current.json?key=" + c.key + "&q=" + c.Localidade)
 	if err != nil {
 		return weatherAPIOutput, errors.New("ocorreu um erro, ao buscar informações: " + err.Error())
 	}
