@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"io"
 
 	"github.com/nagahshi/pos_go_weather/internal/dto"
@@ -52,5 +53,5 @@ func (c *WeatherAPI) Search() (weatherAPIOutput dto.WeatherOutput, err error) {
 		return weatherAPIOutput, nil
 	}
 
-	return weatherAPIOutput, errors.New("ocorreu um erro, ao buscar informações: bad request")
+	return weatherAPIOutput, fmt.Errorf("ocorreu um erro, ao buscar informações: %s status: %d", string(respBody), resp.StatusCode)
 }
