@@ -1,7 +1,12 @@
 package web
 
 import (
+	"encoding/json"
 	"net/http"
+	"regexp"
+	"strings"
+
+	"github.com/go-chi/chi/v5"
 
 	useCase "github.com/nagahshi/pos_go_weather/internal/useCase"
 )
@@ -18,16 +23,35 @@ func NewWeatherHandler(searchCEPUseCase useCase.SearchCEPUseCase, getWeatherUseC
 	}
 }
 
-func (h *WeatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
-	// output, err := h.CheckHealthyUseCase.Execute()
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+// GetWeather - busca de clima pelo CEP
+func (wh *WeatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
+	var CEP = chi.URLParam(r, "cep")
+	var re *regexp.Regexp = regexp.MustCompile("[0-9]+")
 
-	// err = json.NewEncoder(w).Encode(output)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
+	CEP = strings.Join(re.FindAllString(CEP, -1), "")
+	if len(CEP) != 8 {
+		http.Error(w, "CEP inválido", http.StatusUnprocessableEntity)
+		return
+	}
+
+	// SearchCEP - busca de endereço pelo CEP
+	outputCEP, err := wh.SearchCEPUseCase.Execute(CEP)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// GetWeather - busca de clima pelo endereço encontrado em SearchCEP
+	outputWeather, err := wh.GetWeatherUseCase.Execute(outputCEP.ToWeatherInput())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(outputWeather)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		return
+	}
 }
