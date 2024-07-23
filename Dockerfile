@@ -7,3 +7,4 @@ FROM scratch
 WORKDIR /app
 COPY --from=builder /app/cloudrun .
 ENTRYPOINT [ "./cloudrun" ]
+RUN apk add --no-cache ca-certificates
