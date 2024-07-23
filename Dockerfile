@@ -6,7 +6,8 @@ RUN apk update \
         && apk add --no-cache \
         ca-certificates \
         && update-ca-certificates 2>/dev/null || true
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o cloudrun ./cmd/main.go
+RUN go mod tidy
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags='-w -s' -o cloudrun ./cmd/main.go
 
 FROM scratch
 WORKDIR /app
