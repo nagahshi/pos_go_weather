@@ -12,7 +12,7 @@ func NewSearchCEPUseCase() *SearchCEPUseCase {
 }
 
 func (c *SearchCEPUseCase) Execute(CEP string) (output dto.CEPOutput, err error) {
-	srvc := service.NewViaCEPService(CEP)
+	srvc := service.NewBrasilAPIService(CEP)
 
 	response, err := srvc.Search()
 	if err != nil {
