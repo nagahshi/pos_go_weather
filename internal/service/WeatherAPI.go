@@ -53,5 +53,5 @@ func (c *WeatherAPI) Search() (weatherAPIOutput dto.WeatherOutput, err error) {
 		return weatherAPIOutput, nil
 	}
 
-	return weatherAPIOutput, fmt.Errorf("ocorreu um erro, ao buscar informações: %s status: %d", string(respBody), resp.StatusCode)
+	return weatherAPIOutput, fmt.Errorf("ocorreu um erro, ao buscar informações: %s status: %d url: %s", string(respBody), resp.StatusCode, "http://api.weatherapi.com/v1/current.json?key="+c.key+"&q="+c.Localidade)
 }
