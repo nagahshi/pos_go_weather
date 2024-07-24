@@ -10,7 +10,7 @@ type WeatherInput struct {
 }
 
 type WeatherOutput struct {
-	C float64 `json:"celsius"`
-	F float64 `json:"fahrenheit"`
-	K float64 `json:"kelvin"`
+	C float64 `json:"temp_C"`
+	F float64 `json:"temp_F"`
+	K float64 `json:"temp_K"`
 }
