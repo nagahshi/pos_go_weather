@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -30,21 +31,23 @@ func (wh *WeatherHandler) GetWeather(w http.ResponseWriter, r *http.Request) {
 
 	CEP = strings.Join(re.FindAllString(CEP, -1), "")
 	if len(CEP) != 8 {
-		http.Error(w, "CEP inválido", http.StatusUnprocessableEntity)
+		http.Error(w, "invalid zipcode", http.StatusUnprocessableEntity)
 		return
 	}
 
 	// SearchCEP - busca de endereço pelo CEP
 	outputCEP, err := wh.SearchCEPUseCase.Execute(CEP)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "can not find zipcode", http.StatusNotFound)
 		return
 	}
+
+	log.Println(outputCEP)
 
 	// GetWeather - busca de clima pelo endereço encontrado em SearchCEP
 	outputWeather, err := wh.GetWeatherUseCase.Execute(outputCEP.ToWeatherInput())
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "can not find location to weather", http.StatusNotFound)
 		return
 	}
 
