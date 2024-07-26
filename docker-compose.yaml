@@ -1,0 +1,11 @@
+version: "3"
+services:
+  simple_weather_api:
+    container_name: simple_weather_api
+    build:
+      context: .
+    environment:
+      - PORT=8080
+      - WEATHER_API_KEY=
+    ports:
+      - "8080:8080"
